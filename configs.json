@@ -1,7 +1,6 @@
 {
     "WinChromeCMD": "chrome",
     "MacChromeCMD": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-    "ExcelFile": "orders.xlsx",
     "WaitChromeDelay": 2000,
     "BatchSize": 4,
     "SaveOnEveryBatch": true,
