@@ -28,7 +28,6 @@ type ChromeDPWithHead struct {
 	BatchSize            int
 	BatchInterval        int
 	Timeout              time.Duration
-	SaveOnEveryBatch     bool
 	SliceScheduler       task.ISliceScheduler
 }
 
@@ -45,7 +44,6 @@ func NewChromeDPWithHead() (r *ChromeDPWithHead) {
 	r.BatchInterval = r.ConfigProvider.GetIntDefault("BatchInterval", 500)
 	timeout := r.ConfigProvider.GetIntDefault("Timeout", 10000)
 	r.Timeout = time.Duration(timeout) * time.Millisecond
-	r.SaveOnEveryBatch = r.ConfigProvider.GetBool("SaveOnEveryBatch")
 	r.SliceScheduler = task.NewBatchScheduler(r.BatchSize, r.BatchInterval)
 	return r
 }
