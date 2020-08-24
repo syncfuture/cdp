@@ -95,3 +95,6 @@ func (x *ChromeDPWithHead) Fetch(slicePtr interface{}, action func(ctx context.C
 		action(taskCtx, i, item)
 	})
 }
+func (x *ChromeDPWithHead) Cancel() {
+	x.SliceScheduler.Cancel()
+}
