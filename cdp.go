@@ -31,7 +31,7 @@ type ChromeDPWithHead struct {
 	SliceScheduler       task.ISliceScheduler
 }
 
-func NewChromeDPWithHead() (r *ChromeDPWithHead) {
+func NewChromeDPWithHead(batchEvents ...func(int, int)) (r *ChromeDPWithHead) {
 	r = new(ChromeDPWithHead)
 	r.ConfigProvider = config.NewJsonConfigProvider()
 	if runtime.GOOS == "windows" {
@@ -44,7 +44,7 @@ func NewChromeDPWithHead() (r *ChromeDPWithHead) {
 	r.BatchInterval = r.ConfigProvider.GetIntDefault("BatchInterval", 500)
 	timeout := r.ConfigProvider.GetIntDefault("Timeout", 10000)
 	r.Timeout = time.Duration(timeout) * time.Millisecond
-	r.SliceScheduler = task.NewBatchScheduler(r.BatchSize, r.BatchInterval)
+	r.SliceScheduler = task.NewBatchScheduler(r.BatchSize, r.BatchInterval, batchEvents...)
 	return r
 }
 
