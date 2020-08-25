@@ -83,6 +83,8 @@ func (x *ChromeDPWithHead) Init() {
 }
 
 func (x *ChromeDPWithHead) Fetch(action func(ctx context.Context)) {
+	x.Init()
+
 	ctx := context.Background()
 	timeoutCtx, cancel := context.WithTimeout(ctx, x.Timeout)
 	defer cancel()
