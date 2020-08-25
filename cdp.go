@@ -14,8 +14,8 @@ import (
 
 	"os/exec"
 
-	log "github.com/kataras/golog"
 	"github.com/syncfuture/go/config"
+	log "github.com/syncfuture/go/slog"
 	"github.com/syncfuture/go/u"
 )
 
@@ -48,7 +48,7 @@ func NewChromeDPWithHead(batchEvents ...func(int, int)) (r *ChromeDPWithHead) {
 	return r
 }
 
-func (x *ChromeDPWithHead) Fetch(slicePtr interface{}, action func(ctx context.Context, i int, v interface{})) {
+func (x *ChromeDPWithHead) Init() {
 	portOpen := isPortOpen(9222)
 
 	if !portOpen {
@@ -80,6 +80,24 @@ func (x *ChromeDPWithHead) Fetch(slicePtr interface{}, action func(ctx context.C
 		log.Fatal("get webSocketDebuggerUrl failed")
 	}
 	log.Info("Connecting to ", x.WebSocketDebuggerURL)
+}
+
+func (x *ChromeDPWithHead) Fetch(action func(ctx context.Context)) {
+	ctx := context.Background()
+	timeoutCtx, cancel := context.WithTimeout(ctx, x.Timeout)
+	defer cancel()
+
+	allocCtx, cancel := chromedp.NewRemoteAllocator(timeoutCtx, x.WebSocketDebuggerURL)
+	defer cancel()
+
+	taskCtx, cancel := chromedp.NewContext(allocCtx)
+	defer cancel()
+
+	action(taskCtx)
+}
+
+func (x *ChromeDPWithHead) SliceFetch(slicePtr interface{}, action func(ctx context.Context, i int, v interface{})) {
+	x.Init()
 
 	x.SliceScheduler.SliceRun(slicePtr, func(i int, item interface{}) {
 		ctx := context.Background()
@@ -95,6 +113,7 @@ func (x *ChromeDPWithHead) Fetch(slicePtr interface{}, action func(ctx context.C
 		action(taskCtx, i, item)
 	})
 }
+
 func (x *ChromeDPWithHead) Cancel() {
 	x.SliceScheduler.Cancel()
 }

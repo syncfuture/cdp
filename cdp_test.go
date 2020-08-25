@@ -9,7 +9,7 @@ import (
 
 func TestSliceRun(t *testing.T) {
 	cdp := NewChromeDPWithHead()
-	cdp.Fetch("", func(ctx1 context.Context, i int, item interface{}) {
+	cdp.SliceFetch("", func(ctx1 context.Context, i int, item interface{}) {
 		ctx := context.Background()
 		timeoutCtx, cancel := context.WithTimeout(ctx, cdp.Timeout)
 		defer cancel()
