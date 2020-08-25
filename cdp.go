@@ -79,7 +79,7 @@ func (x *ChromeDPWithHead) Init() {
 	if x.WebSocketDebuggerURL == "" {
 		log.Fatal("get webSocketDebuggerUrl failed")
 	}
-	log.Info("Connecting to ", x.WebSocketDebuggerURL)
+	log.Debug("Connecting to ", x.WebSocketDebuggerURL)
 }
 
 func (x *ChromeDPWithHead) Fetch(action func(ctx context.Context)) {
